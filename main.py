@@ -2,7 +2,7 @@ import pygame
 import tank
 import block
 import bullet
-
+import hpbar
 
 pygame.init()  # 초기화
 
@@ -12,6 +12,7 @@ screen = pygame.display.set_mode(background)  # screen을 지정한 해상도로
 done = False  # 게임이 끝났는가?
 clock = pygame.time.Clock()
 tanks = [tank.Tank(1), tank.Tank(2)]  # 탱크가 두개가됐다.
+hbar = [hpbar.Hpbar(10, 10, 100), hpbar.Hpbar(800 - 210, 10, 100)] #각 플레이어별 체력바
 nowPlayer=0 #0번플레이어부터 시작
 blocks = pygame.sprite.Group()  # 스프라이트의 묶음으로
 
@@ -35,9 +36,11 @@ def running():
         newBullet = tanks[nowPlayer].update(pygame.key.get_pressed(),blocks,exist)  # 키 입력을 받은대로 탱크에 보낸다.
         if newBullet and not exist:
             theBullet = newBullet  # 새 탄환
-        
-        # for i,tank in enumerate(tanks):  # 
-        #     screen.blit(tank.image, tank.rect)  # 탱크렌더링
+   
+        for i in range(2): #두명치 체력바 다 그려준다
+            hbar[i].current = tanks[i].hp
+            hbar[i].draw(screen)
+
         
         for tank in tanks:
             tank.flip(screen) 
