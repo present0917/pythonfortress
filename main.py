@@ -1,4 +1,6 @@
 import pygame#라이브러리
+import tank
+=======
 import block
 pygame.init()#초기화
 
@@ -7,8 +9,7 @@ background=[800,600] #배경 해상도
 screen=pygame.display.set_mode(background) #screen을 지정한 해상도로
 done=False #게임이 끝났는가?
 clock=pygame.time.Clock()
-tank1=pygame.image.load('images/tank/missile.png')
-tank1=pygame.transform.scale(tank1,(80,60))
+tank1=tank.Tank()
 
 blocks = pygame.sprite.Group() #스프라이트의 묶음으로
 
@@ -28,10 +29,8 @@ def running():
             if event.type == pygame.QUIT:
                 done=True
 
-        
-
-        screen.blit(tank1,(x,y))#탱크렌더링   
-        blocks.update()  
+        tank1.update(pygame.key.get_pressed())# 키 입력을 받은대로 tank1에 보낸다.ㅁ
+        screen.blit(tank1.image,tank1.rect)#탱크렌더링        
         blocks.draw(screen) #블럭묶음 렌더링   
         pygame.display.update()
 
