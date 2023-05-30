@@ -46,7 +46,9 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         return bullet.Bullet(self.rect.center, speed,self.direc)
 
 
-    def update(self, keys,blocks):
+    def update(self, keys,blocks,exist):
+        if exist:
+            return
         if not self.isLand:
             self.rect.y += 10
             if pygame.sprite.spritecollide(self, blocks,False):
@@ -57,17 +59,23 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         if keys[K_RIGHT]and self.isLand:
             self.rect.x += self.speed
             self.direc="R"
+
         if keys[K_SPACE]:
             if not self.firing:
                 self.firing = True
                 self.fireTime = 0
             else:
-                self.fireTime += 0.2
+                if self.fireTime < 10:
+                    self.fireTime += 0.05
+                else:
+                    self.firing = False
+                    return self.fire()
         else:
             if self.firing:
                 self.firing = False
                 return self.fire()
+            
     def hiten(self):  # 탱크가 탄환에 맞았을 때 체력을 깎는 함수입니다.
-        self.hp -= 10
+        self.hp -= 40
         if self.hp <= 0:
             self.kill()
