@@ -5,11 +5,11 @@ import random #무작위선택 위해
 import bullet
 
 class Tank(pygame.sprite.Sprite): #스프라이트화
-    def __init__(self): #초기화
+    def __init__(self,player): #초기화
         super().__init__()
         self.images = [] #빈배열선언후
-        image_names = ["cannon.png", "carrot.png", "catapult.png", "missile.png"] #탱크폴더의 이미지이름들
-        for name in image_names:
+        imageNames = ["cannon.png", "carrot.png", "catapult.png", "missile.png"] #탱크폴더의 이미지이름들
+        for name in imageNames:
             image_path = os.path.join("images", "tank", name) #해당경로의 파일이미지
             image = pygame.image.load(image_path)
             image = pygame.transform.scale(image, (100, 60))
@@ -17,8 +17,14 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.index = random.randint(0, len(self.images) - 1)  #무작위 선택
         self.image = self.images[self.index] #무작위 탱크 선택
         self.rect = self.image.get_rect() #충돌설정 위한 범위설정
+        
+        if player == 1:
+            self.rect.x = 100 
+        else:
+            self.rect.x=700  # 탱크위치 플레이어따라 선택
+        self.rect.y = 100
         self.speed = 5
-
+        self.hp=100 #체력초기설정
         self.power=0
         self.isLand=False
         self.firing = False
@@ -52,3 +58,7 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
             if self.firing:
                 self.firing = False
                 return self.fire()
+    def hiten(self):  # 탱크가 탄환에 맞았을 때 체력을 깎는 함수입니다.
+        self.hp -= 10
+        if self.hp <= 0:
+            self.kill()
