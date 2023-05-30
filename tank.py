@@ -24,11 +24,11 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
             self.rect.y += 10
             if pygame.sprite.spritecollide(self, blocks,False):
                 self.isLand = True
-        if keys[K_LEFT]:
+        if keys[K_LEFT] and self.isLand:
             self.rect.x -= self.speed
-        if keys[K_RIGHT]:
+        if keys[K_RIGHT]and self.isLand:
             self.rect.x += self.speed
-        if keys[K_UP]:
+        if keys[K_UP]and self.isLand:
             self.rect.y -= self.speed
-        if keys[K_DOWN]:
+        if keys[K_DOWN]and self.isLand:
             self.rect.y += self.speed
