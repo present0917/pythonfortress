@@ -3,6 +3,7 @@ import tank
 import block
 import bullet
 
+
 pygame.init()  # 초기화
 
 backgroundColor = (255, 255, 255)  # 배경색 지정
@@ -17,10 +18,10 @@ blocks = pygame.sprite.Group()  # 스프라이트의 묶음으로
 for _ in range(10):  # 테스트용 10개만
     block_obj = block.Block()
     blocks.add(block_obj)
-
 theBullet = None  # 탄환변수
 
 def running():
+
     global done, tank1, theBullet  # 캐릭터와 게임오버여부,탄환 전역변수로
     while not done:
         clock.tick(30)  # 30프레임

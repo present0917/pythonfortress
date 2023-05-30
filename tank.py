@@ -18,6 +18,7 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.image = self.images[self.index] #무작위 탱크 선택
         self.rect = self.image.get_rect() #충돌설정 위한 범위설정
         self.speed = 5
+
         self.power=0
         self.isLand=False
         self.firing = False
@@ -27,14 +28,19 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         speed = [5, -10 * self.fireTime]  # 스페이스 누르는 시간 비례
         return bullet.Bullet(self.rect.center, speed)
 
-    def update(self, keys):
-        if keys[K_LEFT]:
+
+    def update(self, keys,blocks):
+        if not self.isLand:
+            self.rect.y += 10
+            if pygame.sprite.spritecollide(self, blocks,False):
+                self.isLand = True
+        if keys[K_LEFT] and self.isLand:
             self.rect.x -= self.speed
-        if keys[K_RIGHT]:
+        if keys[K_RIGHT]and self.isLand:
             self.rect.x += self.speed
-        if keys[K_UP]:
+        if keys[K_UP]and self.isLand:
             self.rect.y -= self.speed
-        if keys[K_DOWN]:
+        if keys[K_DOWN]and self.isLand:
             self.rect.y += self.speed
         if keys[K_SPACE]:
             if not self.firing:
