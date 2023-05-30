@@ -17,7 +17,11 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.index = random.randint(0, len(self.images) - 1)  #무작위 선택
         self.image = self.images[self.index] #무작위 탱크 선택
         self.rect = self.image.get_rect() #충돌설정 위한 범위설정
-        
+        if player==1:
+            self.direc="R"
+        else:
+            self.direc="L" #플레이어에 따른 초기방향설정    
+
         if player == 1:
             self.rect.x = 100 
         else:
@@ -30,6 +34,12 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.firing = False
         self.fireTime = 0
 
+    def flip(self, surface):
+        image = self.image
+        if self.direc == "L":
+            image = pygame.transform.flip(image, True, False)
+        surface.blit(image, self.rect) #방향따라서 렌더링
+    
     def fire(self):
         speed = [5, -10 * self.fireTime]  # 스페이스 누르는 시간 비례
         return bullet.Bullet(self.rect.center, speed)
@@ -42,8 +52,10 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
                 self.isLand = True
         if keys[K_LEFT] and self.isLand:
             self.rect.x -= self.speed
+            self.direc="L"
         if keys[K_RIGHT]and self.isLand:
             self.rect.x += self.speed
+            self.direc="R"
         if keys[K_UP]and self.isLand:
             self.rect.y -= self.speed
         if keys[K_DOWN]and self.isLand:

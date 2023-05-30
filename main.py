@@ -35,9 +35,11 @@ def running():
         if newBullet:
             theBullet = newBullet  # 새 탄환
         
-        for i,tank in enumerate(tanks):  # 
-            screen.blit(tank.image, tank.rect)  # 탱크렌더링
+        # for i,tank in enumerate(tanks):  # 
+        #     screen.blit(tank.image, tank.rect)  # 탱크렌더링
         
+        for tank in tanks:
+            tank.flip(screen)  # Use the new draw method
         
         
         blocks.draw(screen)  # 블럭묶음 렌더링   
