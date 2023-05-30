@@ -33,6 +33,7 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.isLand=False
         self.firing = False
         self.fireTime = 0
+        self.theBullet=None #발사된총알
 
     def flip(self, surface):
         image = self.image
@@ -61,15 +62,17 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         if keys[K_DOWN]and self.isLand:
             self.rect.y += self.speed
         if keys[K_SPACE]:
-            if not self.firing:
+            if not self.firing and self.isLand and self.theBullet is None:
                 self.firing = True
                 self.fireTime = 0
+            # else:
+            #     self.fireTime += 0.2
             else:
-                self.fireTime += 0.2
-        else:
-            if self.firing:
-                self.firing = False
-                return self.fire()
+                if self.firing:
+                    self.firing = False
+                    if self.theBullet is None:
+                        self.theBullet = self.fire()
+                        return self.theBullet
     def hiten(self):  # 탱크가 탄환에 맞았을 때 체력을 깎는 함수입니다.
         self.hp -= 10
         if self.hp <= 0:
