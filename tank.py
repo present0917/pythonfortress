@@ -61,7 +61,7 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
             self.direc="R"
 
         if keys[K_SPACE]:
-            if not self.firing:
+            if not self.firing and self.isLand:
                 self.firing = True
                 self.fireTime = 0
             else:
