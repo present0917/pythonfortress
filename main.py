@@ -32,24 +32,25 @@ def running():
             if event.type == pygame.QUIT:
                 done = True
 
+        exist=theBullet is not None
+        newBullet = tanks[nowPlayer].update(pygame.key.get_pressed(),blocks,exist)  # 키 입력을 받은대로 탱크에 보낸다.
+        if newBullet and not exist:
+            theBullet = newBullet  # 새 탄환
+   
         for i in range(2): #두명치 체력바 다 그려준다
             hbar[i].current = tanks[i].hp
             hbar[i].draw(screen)
-            
-        newBullet = tanks[nowPlayer].update(pygame.key.get_pressed(),blocks)  # 키 입력을 받은대로 탱크에 보낸다.
-        if newBullet:
-            theBullet = newBullet  # 새 탄환
+
         
-        for i,tank in enumerate(tanks):  
-            screen.blit(tank.image, tank.rect)  # 탱크렌더링
-        
+        for tank in tanks:
+            tank.flip(screen) 
         
         
         blocks.draw(screen)  # 블럭묶음 렌더링   
 
         if theBullet:
             theBullet.update()
-            if theBullet.rect.y >= background[1]:  # 탄환이 바닥에 닿으면
+            if theBullet.rect.y >= 600:  # 탄환이 바닥에 닿으면
                 theBullet = None  # 탄환을제거
                 nowPlayer = (nowPlayer + 1) % 2  # 턴넘김
             else:

@@ -17,7 +17,11 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.index = random.randint(0, len(self.images) - 1)  #무작위 선택
         self.image = self.images[self.index] #무작위 탱크 선택
         self.rect = self.image.get_rect() #충돌설정 위한 범위설정
-        
+        if player==1:
+            self.direc="R"
+        else:
+            self.direc="L" #플레이어에 따른 초기방향설정    
+
         if player == 1:
             self.rect.x = 100 
         else:
@@ -29,36 +33,52 @@ class Tank(pygame.sprite.Sprite): #스프라이트화
         self.isLand=False
         self.firing = False
         self.fireTime = 0
+        self.theBullet=None #발사된총알
 
+    def flip(self, surface):
+        image = self.image
+        if self.direc == "L":
+            image = pygame.transform.flip(image, True, False)
+        surface.blit(image, self.rect) #방향따라서 렌더링
+
+        if self.firing:
+            pygame.draw.rect(surface,(255,0,0), (self.rect.x, self.rect.y - 10, 100 * self.fireTime / 3, 5))
+    
     def fire(self):
         speed = [5, -10 * self.fireTime]  # 스페이스 누르는 시간 비례
-        return bullet.Bullet(self.rect.center, speed)
+        return bullet.Bullet(self.rect.center, speed,self.direc)
 
 
-    def update(self, keys,blocks):
+    def update(self, keys,blocks,exist):
+        if exist:
+            return
         if not self.isLand:
             self.rect.y += 10
             if pygame.sprite.spritecollide(self, blocks,False):
                 self.isLand = True
         if keys[K_LEFT] and self.isLand:
             self.rect.x -= self.speed
+            self.direc="L"
         if keys[K_RIGHT]and self.isLand:
             self.rect.x += self.speed
-        if keys[K_UP]and self.isLand:
-            self.rect.y -= self.speed
-        if keys[K_DOWN]and self.isLand:
-            self.rect.y += self.speed
+            self.direc="R"
+
         if keys[K_SPACE]:
-            if not self.firing:
+            if not self.firing and self.isLand:
                 self.firing = True
                 self.fireTime = 0
             else:
-                self.fireTime += 0.2
+                if self.fireTime < 10:
+                    self.fireTime += 0.05
+                else:
+                    self.firing = False
+                    return self.fire()
         else:
             if self.firing:
                 self.firing = False
                 return self.fire()
+            
     def hiten(self):  # 탱크가 탄환에 맞았을 때 체력을 깎는 함수입니다.
-        self.hp -= 10
+        self.hp -= 40
         if self.hp <= 0:
             self.kill()
